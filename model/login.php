@@ -7,7 +7,17 @@ if($_POST){
 	$table = "admin";
 	$email = isset($_POST['email']) ? $_POST['email'] : '';
 	$password = isset($_POST['password']) ? $_POST['password'] : '';
+	$login = isset($_POST['login']) ? $_POST['login'] : 'No';
 
+	if($login == 'Yes'){
+		if(file_exists('../installer.txt')){
+			unlink('../installer.txt');
+		}
+		if(file_exists('../login.php')){
+			rename('../login.php','../login-sample.php');
+			//unlink('../login.php');
+		}
+	}
 	$res = $db->getRow("SELECT * FROM ".$table." where `email`=? and `password`=? and `status`=?",array($email,$db->passwordEncrypt($password),1));
 	if($res)
 	{
