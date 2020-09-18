@@ -1,17 +1,31 @@
 <?php include_once('config/PDO.php');
 $db = new db();
-$email = $password = $error = '';
+$email = $password = $error = $installerTxt = '';
 
 try{
 	$checkForInstall = $db->numRow("SELECT * FROM `admin`",array());
-	if($checkForInstall){
-		header('Location:index.php'); exit();
+	if($checkForInstall)
+	{
+		if (file_exists('installer.txt')) {   
+			$fh = fopen('installer.txt','r');
+			while ($line = fgets($fh)) {
+				$installerTxt .= $line;  
+			}
+			fclose($fh);
+		}else{
+			header('Location:index.php'); exit();
+		}
 	}else{
 		$unique = $db->generateRandomString();
 		$email = 'admin@admin.com';
 		$username = 'admin';
 		$password = $db->generateRandomString(8);
 		$role = 'main';
+
+		$file = fopen('installer.txt',"w");
+		$content = '<label>Username: <span>'.$email.'</span></label><br><label>Password: <span>'.$password.'</span></label>';
+		fwrite($file,$content);
+		fclose($file);
 
 		$admin_id = $db->insertRow("INSERT INTO `admin` (`unique_id`,`email`,`username`,`password`,`role`,`created_at`,`updated_at`) VALUES (?,?,?,?,?,NOW(),NOW())",array($unique,$email,$username,$db->passwordEncrypt($password),$role));
 		if($admin_id){
@@ -59,12 +73,17 @@ try{
 		<?php if(empty($error)){ ?>
 			<h4>Below you must save your login details.</h4>
 			<div class="form-group">
+				<?php if(!empty($installerTxt)){
+						echo $installerTxt;
+					}else{
+				?>
 				<label>Username: <span><?php echo $email; ?></span></label>
 				<br>
 				<label>Password: <span><?php echo $password; ?></span></label>
+				<?php } ?>
 			</div>
 			<div class="form-actions">
-				<a href="index.php" class="btn btn-success btn-squared btn-login">Login to continue...</a>
+				<a href="login.php" class="btn btn-success btn-squared btn-login">Login to continue...</a>
 			</div>
 		<?php }else{ ?>
 			<h4><?php echo $error;?></h4>

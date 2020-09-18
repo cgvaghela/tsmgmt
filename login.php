@@ -1,24 +1,6 @@
 <?php session_start();
 include_once('config/PDO.php');
 $db = new db();
-
-// instalation step START
-try{
-	$checkForInstall = $db->numRow("SELECT * FROM `admin`",array());
-	if(!$checkForInstall){
-		header('Location:install.php'); exit();
-	}else{
-		if (file_exists('installer.txt')) { 
-			header('Location:install.php'); exit();
-		}
-	}
-}catch (Exception $e) {
-	if(!$checkForInstall){
-		header('Location:install.php'); exit();
-	}
-}
-// instalation step END
-
 if(isset($_SESSION['unique_id']) && !empty($_SESSION['unique_id']))
 {
 	$adminLogin = $db->getRow("SELECT (`unique_id`) FROM `admin` where `unique_id`=?",array($_SESSION['unique_id']));
@@ -61,6 +43,7 @@ if(isset($_SESSION['unique_id']) && !empty($_SESSION['unique_id']))
 		<?php }?>
 		<p>Please enter your email and password to log in.</p>
 		<form class="form-login" method="post" id="form-login" name="form-login">
+			<input type="hidden" name="login" value="Yes">
 			<div class="no-display loading-div">
 				<img src="loading.gif" height="100" width="100">
 			</div>
@@ -92,34 +75,6 @@ if(isset($_SESSION['unique_id']) && !empty($_SESSION['unique_id']))
 					</label>
 					<button type="button" class="btn btn-success btn-squared pull-right btn-login">
 						Login <i class="fa fa-arrow-circle-right"></i>
-					</button>
-				</div>
-			</fieldset>
-		</form>
-	</div>
-
-	<!-- start: FORGOT BOX -->
-	<div class="box-forgot">
-		<h3>Forget Password?</h3>
-		<p>
-			Enter your e-mail address below to reset your password.
-		</p>
-		<form class="form-forgot" id="form-forgot" method="post">
-			<div class="errorHandler alert alert-danger no-display">
-				<i class="fa fa-remove-sign"></i> You have some form errors. Please check below.
-			</div>
-			<fieldset>
-				<div class="form-group">
-					<span class="input-icon">
-						<input type="email" class="form-control" name="email" placeholder="Email">
-						<i class="fa fa-envelope"></i> </span>
-				</div>
-				<div class="form-actions">
-					<a class="btn btn-light-grey go-back">
-						<i class="fa fa-circle-arrow-left"></i> Login
-					</a>
-					<button type="submit" class="btn btn-squared btn-bricky pull-right">
-						Submit <i class="fa fa-arrow-circle-right"></i>
 					</button>
 				</div>
 			</fieldset>
