@@ -1,6 +1,6 @@
 <h2>#Two Wheeler Showroom Management System (tsmgmt)</h2><br>
 
-Demo URL - http://syntegows.com/tsmgmt/<br>
+Demo URL - [http://syntegoworks.com/tsmgmt/](http://syntegoworks.com/tsmgmt/)<br>
 Username - admin@admin.com<br>
 Password - admin<br>
 <br>
